@@ -18,6 +18,27 @@ let items = {
   excited: {color: '#eb4ce0', on: false},
 };
 
+// const starfield = `*　　　　　　•　°　　　　　*　　·　　　　　　　.　　　✧　　·•　　.　　\n
+// 　°　　　　°　　　　　　　　　　　　　　.°　　.　.✶*　　　*　　　.·　\n
+// 　　　　　　　　★　•　*..*　　°★　.　　·　　°　　　　　　.　　　　　\n
+// 　　°　·　✯　　　　✷　　　　　·　　　　·　　　　.　　　☆　°★✧　　　　\n
+// .　　　✶•　.　　　　　　　·　✧✸　✷　　　　　☆　.　　•　　.　　　　　\n
+// 　　　　　　　✷　　　　　　　°　　　　　•　•　　　　　　　·　°　*☆　·*\n
+// *☆*　　　•　　　　　　✷*　　　　　　　•　　　　·　　　　　•　.　.·　\n
+// *　*　•　　　✦•　　　•　·　　　　　　　　•　　　　　　°✧　　　　　　　\n
+// ·　　　　✷　*　　✸　　　　　★　　·　　　　·　*　　　　•　　　　　　　　\n
+// 　·　.✧　　　　✧　　　　　·☆　·　·　.°*.　　　　✧　.☆　　　　　　\n
+// 　　　　　　　✦.　　　　☆　°　　.　　　✧　•　　　　✯　　.　　*.°　　\n
+// 　　　　　　.　•　*　　　　　.　　　　　*　　°　　　　　　✸·　　　*　*\n
+// 　*　　　·　　　*•*　　.·•　*　　　　　　.　　·*°.　　　　°　　　\n
+// 　　　　　　　　　.　　　•　　•★　*　　　　　　　　　　　　　　　　★✸　　\n
+// 　•　·°　　　°·　*✸　•　　　　.　　　　　　✶　　　　　　*　　　　　　\n
+// 　*.·　**　••　　　　　　✦　　*.　　·　　★••　★　　　✸　　　　　\n
+// 　　　••　　　　　　　　　✯　°*　•　·　✧　　　　　　　　✶　*　　.　　\n
+// 　*°*　　　*　　✷✯☆　　　　　　　　☆　　·　*　.　　　•　•　　　　　\n
+// •★　　　°　　　*　　　　.　*　　•　　°　　　　✵　.•　　.　　　　　　\n
+// 　　　　°.　　　　.·*✧　　　　　　　　　　　✧　　•　　　　　*　　☆　　`;
+
 setInfinityColors();
 renderColorCanvas();
 
@@ -49,21 +70,23 @@ function renderColorCanvas() {
   const itemWidth = canvas.width / onItems.length;
 
   if (onItems.length === 0) {
-    //todo sarah make this a pretty gradient or picture or something
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    //idea for clearing a specific region so the pattern stays the same
-    // Clear a specific region (e.g., clear a 100x100 square starting from (50, 50))
-    // ctx.clearRect(50, 50, 100, 100);
   } else {
+    const grd = ctx.createLinearGradient(0, 0, 200, 0);
+
     onItems.forEach((item, index) => {
-      if (!item.on) return;
-      ctx.fillStyle = item.color;
-      ctx.fillRect(index * itemWidth, 0, itemWidth, canvas.height);
-      //todo do text idea
-      //ctx.fillText('star here', index * itemWidth, canvas.height - 10);
+      grd.addColorStop(index / onItems.length, item.color);
     });
+
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // onItems.forEach((item, index) => {
+    //   if (!item.on) return;
+    //   ctx.fillStyle = item.color;
+    //   ctx.fillRect(index * itemWidth, 0, itemWidth, canvas.height);
+    // });
   }
 }
 
