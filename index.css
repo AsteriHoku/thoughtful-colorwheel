@@ -22,40 +22,10 @@ canvas {
   width: 84%;
 }
 
-/* .infinity {
-  position: relative;
-  width: 106px;
-  height: 50px;
-  box-sizing: content-box;
-
-  &::before,
-  &::after {
-    content: '';
-    box-sizing: content-box;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 30px;
-    height: 30px;
-    border-radius: 50px 50px 0 50px;
-    border: 10px solid #32557f;
-    transform: rotate(-45deg);
-
-    /* Apply gradient border */
-    /* box-shadow: 0 0 0 10px #32557f inset, 0 0 0 20px #78a2cc inset;
-  }
-
-  &::after {
-    left: auto;
-    right: 0;
-    border-radius: 50px 50px 50px 0;
-    transform: rotate(45deg);
-
-    /* Apply gradient border */
-    /* box-shadow: 0 0 0 10px #78a2cc inset, 0 0 0 20px #32557f inset;
-  }
-} */
-
+#navbtn {
+  border: none;
+  background-color: white;
+}
 
 .infinity-symbol {
   position: relative;
@@ -73,10 +43,6 @@ canvas {
     width: 30px;
     height: 30px;
     border: 10px inset #32557f;
-    /* border-top-color: violet;
-    border-right-color: blue;
-    border-left-color: cyan;
-    border-bottom-color: green; */
     border-radius: 50px 50px 0 50px;
     transform: rotate(-45deg);
   }
@@ -84,12 +50,18 @@ canvas {
   &::after {
     left: auto;
     right: 0;
-    /* border-top-color: green;
-    border-right-color: cyan;
-    border-left-color: blue;
-    border-bottom-color: violet; */
     border-radius: 50px 50px 50px 0;
     transform: rotate(45deg);
   }
 }
 
+#circle-particles-canvas {
+	position: fixed;
+	z-index: -1;
+	}
+
+#canvas-content {
+	margin: 0;
+	padding: 0;
+	background-color: rgba(0, 0, 0, 0.05);
+	}

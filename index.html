@@ -10,6 +10,22 @@
 </head>
 <body>
 
+<!-- <div id="sidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#" onclick="loadContent('lines.html')">Lines</a>
+  <a href="#" onclick="loadContent('circle-particles.html')">Circle Particles</a>
+</div> -->
+<div>
+  <button id="navbtn" onclick="clickedStraightLines()">｡･:*˚:✧｡</button>
+  <button id="navbtn" onclick="clickedLinearGradiant()">≪ °❈° ≫</button>
+  <button id="navbtn" onclick="clickedCircleParticles()">◤──•~❉᯽</button>
+  <button id="navbtn" onclick="renderShadowCanvas()">᯽❉~•──◥</button>
+  <button id="navbtn" onclick="renderShadowCanvas()">*.·:·.✧ ✦</button>
+  <button id="navbtn" onclick="renderShadowCanvas()">✦ ✧.·:·.*</button>
+  <button id="navbtn" onclick="renderShadowCanvas()">•❅───✧❅✦</button>
+  <button id="navbtn" onclick="renderShadowCanvas()">✦❅✧───❅•</button>
+</div>
+
 <div class="container mt-5">
   <div class="infinity-symbol" id="infinity"></div>
   <h1 class="text-center mb-2">Asteri</h1>
@@ -53,8 +69,8 @@
     </div>
   </div>
   </div>
-  <div class="row canvas-row">
-    <canvas id="colorCanvas"></canvas>
+  <div id="canvas-content" class="row canvas-row">
+    <canvas id="colorCanvas">Your browser does not support HTML5 canvas</canvas>
   </div>
 </div>
 
