@@ -1,6 +1,6 @@
 const canvas = document.getElementById('circle-particles-canvas');
-const context = canvas.getContext("2d");
-context.globalAlpha = 0.5;
+const ctx = canvas.getContext("2d");
+ctx.globalAlpha = 0.5;
 
 let particlesArray = [];
 //todo sarah number of particles for number of colors
@@ -51,26 +51,25 @@ function Particle(x, y, particleTrailWidth, strokeColor, rotateSpeed) {
     this.theta += this.rotateSpeed;
     this.x = innerWidth / 2 + Math.cos(this.theta) * this.t;
     this.y = innerHeight / 2 + Math.sin(this.theta) * this.t;
-    context.beginPath();
-    context.lineWidth = this.particleTrailWidth;
-    context.strokeStyle = this.strokeColor;
-    context.moveTo(ls.x, ls.y);
-    context.lineTo(this.x, this.y);
-    context.stroke();
+    ctx.beginPath();
+    ctx.lineWidth = this.particleTrailWidth;
+    ctx.strokeStyle = this.strokeColor;
+    ctx.moveTo(ls.x, ls.y);
+    ctx.lineTo(this.x, this.y);
+    ctx.stroke();
   };
 }
 
 function anim() {
   requestAnimationFrame(anim);
 
-  context.fillStyle = "rgba(0,0,0,0.05)";
-  context.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particlesArray.forEach((particle) => particle.rotate());
 }
 
 //updated version removed from index.js:
-
 function renderCircleParticlesCanvas(){
   //todo sarah split this function so it can be called with different sizes for different buttons 
   //"dandelion" 800 "circle particles" 101 "suncatcher" 1000 - maybe?
@@ -160,8 +159,8 @@ function renderCircleParticlesCanvas(){
   function anim() {
     requestAnimationFrame(anim);
 
-    context.fillStyle = "rgba(0,0,0,0.05)";
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     particlesArray.forEach((particle) => particle.rotate());
   }

@@ -1,10 +1,10 @@
-//feature 1
-
 //feature 2
 //colors to make you feel more of whatever buttons you choose on the top
 //buttons are: happy, sad, angry, calm, excited, bored, anxious, tired, energized, etc
 //a toggled on button means the color palette displays a color "proven" to make you feel that way
 
+
+//todo try radial gradients with different shapes
 //todo sarah particles working when first clicked and no "on" colors
 //todo sarah why is particles doing what it's doing when I extra click?
 //todo sarah why doesn't the canvas clear between particles and others?
@@ -55,34 +55,43 @@ function changeColor(element) {
     items[elem].on = true;
     element.style.backgroundColor = items[elem].color;
   }
-  //todo sarah make this a switch, or a loop through choices array
-  //then can omit clickedFunctions
   setInfinityColors();
   renderCanvas();
 }
 
+//todo sarah make this a switch, or a loop through choices array
+//then can omit clickedFunctions
 function clickedStraightLines(){
   choice = 'sl';
   renderCanvas();
 }
 
-function clickedLinearGradiant(){
+function clickedLinearGradient(){
   choice = 'lg';
   renderCanvas();
 }
 
-function clickedDiagonalGradiant(){
+function clickedDiagonalGradient(){
   choice = 'dg';
+  renderCanvas();
+}
+
+function clickedCircleParticles(){
+  choice = 'cp';
   renderCanvas();
 }
 
 function renderCanvas(){
   switch (choice){
     case 'lg':
-      renderLinearGradiantCanvas();
+      renderLinearGradientCanvas();
       break;
     case 'dg':
-      renderDiagonalGradiantCanvas();
+      renderDiagonalGradientCanvas();
+      break;
+    case 'cp':
+      renderCircleParticlesCanvas();
+      break;
     default:
         renderStraightLinesCanvas();
   }
@@ -93,7 +102,7 @@ function renderStraightLinesCanvas(){
 
   const canvas = document.getElementById('colorCanvas');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const onItems = Object.values(items).filter(item => item.on);
   const itemWidth = canvas.width / onItems.length;
@@ -105,12 +114,12 @@ function renderStraightLinesCanvas(){
   });
 }
 
-function renderLinearGradiantCanvas(){
-  console.log('rendering linear gradiant canvas');
+function renderLinearGradientCanvas(){
+  console.log('rendering linear gradient canvas');
 
   const canvas = document.getElementById('colorCanvas');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const onItems = Object.values(items).filter(item => item.on);
 
@@ -133,12 +142,12 @@ function renderLinearGradiantCanvas(){
   }
 }
 
-function renderDiagonalGradiantCanvas(){
-  console.log('rendering diagonal gradiant canvas');
+function renderDiagonalGradientCanvas(){
+  console.log('rendering diagonal gradient canvas - choice is ' + choice);
 
   const canvas = document.getElementById('colorCanvas');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const onItems = Object.values(items).filter(item => item.on);
 
@@ -146,7 +155,7 @@ function renderDiagonalGradiantCanvas(){
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   } else {
-    const grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);;
+    const grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
 
     onItems.forEach((item, index) => {
       grd.addColorStop(index / onItems.length, item.color);
@@ -155,4 +164,39 @@ function renderDiagonalGradiantCanvas(){
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
+}
+
+function renderRadialGradientCanvas(){
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  // Create a radial gradient
+  // The inner circle is at x=110, y=90, with radius=30
+  // The outer circle is at x=100, y=100, with radius=70
+  
+
+  const onItems = Object.values(items).filter(item => item.on);
+
+  if (onItems.length === 0) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else {
+    const gradient = ctx.createRadialGradient(110, 90, 30, 100, 100, 70);
+
+    onItems.forEach((item, index) => {
+      gradient.addColorStop(index, item.color);
+    });
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(20, 20, 160, 160);
+  }
+
+  // // Add three color stops
+  // gradient.addColorStop(0, "pink");
+  // gradient.addColorStop(0.9, "white");
+  // gradient.addColorStop(1, "green");
+
+  // // Set the fill style and draw a rectangle
+  // ctx.fillStyle = gradient;
+  // ctx.fillRect(20, 20, 160, 160);
 }
