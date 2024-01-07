@@ -5,30 +5,13 @@
 //buttons are: happy, sad, angry, calm, excited, bored, anxious, tired, energized, etc
 //a toggled on button means the color palette displays a color "proven" to make you feel that way
 
-
-// function openNav() {
-//   document.getElementById("sidenav").style.width = "200px";
-// }
-
-// function closeNav() {
-//   document.getElementById("sidenav").style.width = "0";
-// }
-
-// function loadContent(page) {
-//   const contentContainer = document.getElementById('colorCanvas');
-
-//   fetch(page)
-//     .then(response => response.text())
-//     .then(html => {
-//       contentContainer.innerHTML = html;
-//     })
-//     .catch(error => {
-//       console.error('Error loading content:', error);
-//     });
-// }
-
-
+//todo sarah particles working when first clicked and no "on" colors
+//todo sarah why is particles doing what it's doing when I extra click?
+//todo sarah why doesn't the canvas clear between particles and others?
 //todo sarah make choice array? choice needs to be in the array?
+//todo add different options in the lineargradient function
+//todo sarah split into different js files, start with circle particles because it's big
+//todo check responsiveness
 
 let choice = 'sl';
 
@@ -46,7 +29,7 @@ let items = {
 };
 
 setInfinityColors();
-renderStraightLinesCanvas();
+renderCanvas();
 
 function setInfinityColors() {
   const onItems = Object.values(items).filter(item => item.on);
@@ -73,36 +56,30 @@ function changeColor(element) {
     element.style.backgroundColor = items[elem].color;
   }
   //todo sarah make this a switch, or a loop through choices array
+  //then can omit clickedFunctions
   setInfinityColors();
-  renderCanvas(choice);
+  renderCanvas();
 }
 
 function clickedStraightLines(){
   choice = 'sl';
-  renderCanvas(choice);
+  renderCanvas();
 }
 
 function clickedLinearGradiant(){
   choice = 'lg';
-  renderCanvas(choice);
+  renderCanvas();
 }
 
-function clickedCircleParticles(){
-  choice = 'cp';
-  renderCanvas(choice);
+function clickedDiagonalGradiant(){
+  choice = 'dg';
+  renderCanvas();
 }
 
-function renderCanvas(choice){
-  // const canvas = document.getElementById('colorCanvas');
-  // const ctx = canvas.getContext('2d');
-  // ctx.reset();
-  console.log('canvas has been reset');
+function renderCanvas(){
   switch (choice){
     case 'lg':
       renderLinearGradiantCanvas();
-      break;
-    case 'cp':
-      renderCircleParticlesCanvas();
       break;
     case 'dg':
       renderDiagonalGradiantCanvas();
@@ -113,8 +90,11 @@ function renderCanvas(choice){
 
 function renderStraightLinesCanvas(){
   console.log('rendering straight lines canvas');
+
   const canvas = document.getElementById('colorCanvas');
   const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   const onItems = Object.values(items).filter(item => item.on);
   const itemWidth = canvas.width / onItems.length;
 
@@ -127,14 +107,21 @@ function renderStraightLinesCanvas(){
 
 function renderLinearGradiantCanvas(){
   console.log('rendering linear gradiant canvas');
+
   const canvas = document.getElementById('colorCanvas');
   const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   const onItems = Object.values(items).filter(item => item.on);
 
   if (onItems.length === 0) {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   } else {
+    //this is normal vertical
+    //const grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    //note: Lexie likes this one below
+    //const grd = ctx.createLinearGradient(0, 0, 200, 200);
     const grd = ctx.createLinearGradient(0, 0, 200, 0);
 
     onItems.forEach((item, index) => {
@@ -146,100 +133,26 @@ function renderLinearGradiantCanvas(){
   }
 }
 
-function renderCircleParticlesCanvas(){
-  //todo sarah split this function so it can be called with different sizes for different buttons 
-  //"dandelion" 800 "circle particles" 101 "suncatcher" 1000 - maybe?
-  console.log('rendering circle particles canvas');
+function renderDiagonalGradiantCanvas(){
+  console.log('rendering diagonal gradiant canvas');
+
   const canvas = document.getElementById('colorCanvas');
-  const context = canvas.getContext("2d");
-  context.globalAlpha = 0.5;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  let particlesArray = [];
-  const size = 101;
-  let colors = generateParticleColors(size);
-  console.dir(colors);
-  //todo sarah number of particles for number of colors
-  generateParticles(size, colors);
-  setSize();
-  anim();
+  const onItems = Object.values(items).filter(item => item.on);
 
-  function generateParticleColors(size){
-    const onItems = Object.values(items).filter(item => item.on);
-    const onColors = onItems.map(item => item.color);
-    let colors = [];
+  if (onItems.length === 0) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else {
+    const grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);;
 
-    while (colors.length < size){
-      colors = [...colors, ...onColors];
-    }
-    console.log(`generateParticleColors colors has ${colors.length} and size is ${size}`);
+    onItems.forEach((item, index) => {
+      grd.addColorStop(index / onItems.length, item.color);
+    });
 
-    return colors;
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
-
-  function generateParticles(amount, colors) {
-    //console.log(`particlesArray first ${particlesArray.length} and adding ${amount}`);
-    for (let i = 0; i < amount; i++) {
-      particlesArray[i] = new Particle(
-        innerWidth / 2,
-        innerHeight / 2,
-        50,
-        colors[i],
-        0.01,
-      );
-    }
-  }
-
-  // function generateRandomColor() {
-  //   let hexSet = "0123456789ABCDEF";
-  //   let finalHexString = "#";
-  //   for (let i = 0; i < 6; i++) {
-  //     finalHexString += hexSet[Math.ceil(Math.random() * 15)];
-  //   }
-  //   console.log(finalHexString);
-  //   return finalHexString;
-  // }
-
-  function setSize() {
-    canvas.height = innerHeight;
-    canvas.width = innerWidth;
-  }
-
-  function Particle(x, y, particleTrailWidth, strokeColor, rotateSpeed) {
-    this.x = x;
-    this.y = y;
-    this.particleTrailWidth = particleTrailWidth;
-    this.strokeColor = strokeColor;
-    this.theta = Math.random() * Math.PI * 2;
-    this.rotateSpeed = rotateSpeed;
-    this.t = Math.random() * 150;
-
-    this.rotate = () => {
-      const ls = {
-        x: this.x,
-        y: this.y,
-      };
-      this.theta += this.rotateSpeed;
-      this.x = innerWidth / 2 + Math.cos(this.theta) * this.t;
-      this.y = innerHeight / 2 + Math.sin(this.theta) * this.t;
-      context.beginPath();
-      context.lineWidth = this.particleTrailWidth;
-      context.strokeStyle = this.strokeColor;
-      context.moveTo(ls.x, ls.y);
-      context.lineTo(this.x, this.y);
-      context.stroke();
-    };
-  }
-
-  function anim() {
-    requestAnimationFrame(anim);
-
-    context.fillStyle = "rgba(0,0,0,0.05)";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    particlesArray.forEach((particle) => particle.rotate());
-  }
-}
-
-function renderShadowCanvas(){
-
 }
