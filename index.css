@@ -7,7 +7,7 @@
   
 .btn {
   border: none;
-  background-color: whitesmoke;
+  background-color: #d5dfed;
   color: black;
 }
 
@@ -22,7 +22,7 @@ canvas {
   width: 84%;
 }
 
-#navbtn {
+.navbtn {
   border: none;
   background-color: white;
 }

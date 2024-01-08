@@ -11,14 +11,16 @@
 <body>
 
 <div>
-  <button id="navbtn" onclick="clickedStraightLines()">｡･:*˚:✧｡</button>
-  <button id="navbtn" onclick="clickedLinearGradiant()">≪ °❈° ≫</button>
-  <button id="navbtn" onclick="clickedDiagonalGradiant()">◤──•~❉᯽</button>
-  <button id="navbtn" onclick="clickedCircleParticles()">᯽❉~•──◥</button>
-  <button id="navbtn" onclick="renderShadowCanvas()">*.·:·.✧ ✦</button>
-  <button id="navbtn" onclick="renderShadowCanvas()">✦ ✧.·:·.*</button>
-  <button id="navbtn" onclick="renderShadowCanvas()">•❅───✧❅✦</button>
-  <button id="navbtn" onclick="renderShadowCanvas()">✦❅✧───❅•</button>
+  <button class="navbtn" id="sl" onclick="handleChoiceClicked(this.id)">｡･:*˚:✧｡</button>
+  <button class="navbtn" id="lg" onclick="handleChoiceClicked(this.id)">≪ °❈° ≫</button>
+  <button class="navbtn" id="dg" onclick="handleChoiceClicked(this.id)">◤──•~❉᯽</button>
+  <button class="navbtn" id="rg" onclick="handleChoiceClicked(this.id)">᯽❉~•──◥</button>
+  <button class="navbtn" id="cg" onclick="handleChoiceClicked(this.id)">* . °•★|•°∵</button>
+  <button class="navbtn" id="" onclick="handleChoiceClicked(this.id)">∵°•|☆•° . *</button>
+  <button class="navbtn" id="cp" onclick="handleChoiceClicked(this.id)">*.·:·.✧ ✦</button>
+  <button class="navbtn" id="" onclick="handleChoiceClicked(this.id)">✦ ✧.·:·.*</button>
+  <button class="navbtn" id="" onclick="handleChoiceClicked(this.id)">•❅───✧❅✦</button>
+  <button class="navbtn" id="" onclick="handleChoiceClicked(this.id)">✦❅✧───❅•</button>
 </div>
 
 <div class="container mt-5">
@@ -64,7 +66,7 @@
     </div>
   </div>
   </div>
-  <div id="canvas-content" class="row canvas-row">
+  <div id="canvas-content" class="row canvas-row mb-3">
     <canvas id="colorCanvas">Your browser does not support HTML5 canvas</canvas>
   </div>
 </div>
