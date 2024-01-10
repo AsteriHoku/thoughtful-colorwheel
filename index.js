@@ -18,7 +18,7 @@ let items = {
   excited: {color: '#eb4ce0', on: false},
 };
 
-setInfinityColors();
+//setInfinityColors();
 renderCanvas();
 
 function setInfinityColors() {
@@ -45,7 +45,7 @@ function changeColor(element) {
     items[elem].on = true;
     element.style.backgroundColor = items[elem].color;
   }
-  setInfinityColors();
+  //setInfinityColors();
   renderCanvas();
 }
 
@@ -80,7 +80,15 @@ function renderCanvas(){
 function getContext(){
   const canvas = document.getElementById('colorCanvas');
   const ctx = canvas.getContext('2d');
+  //todo sarah why does setting the height and width here make the canvas wrong size?
+  if (choice !== 'cp') {
+    console.log('setting canvas height and width for !cp choice of ' + choice);
+    canvas.height = 400;
+    canvas.width = 1000;
+  }
   const onItems = Object.values(items).filter(item => item.on);
+  console.log('onItems');
+  console.dir(onItems);
   // ctx.reset();
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#ffffff';
@@ -92,15 +100,19 @@ function renderStraightLinesCanvas(){
   console.log('rendering straight lines canvas');
 
   const {canvas, ctx, onItems} = getContext();
-
-  if (onItems.length > 0) {
-    const itemWidth = canvas.width / onItems.length;
-
-    onItems.forEach((item, index) => {
-      if (!item.on) return;
-      ctx.fillStyle = item.color;
-      ctx.fillRect(index * itemWidth, 0, itemWidth, canvas.height);
-    });
+  if (choice !== 'sl') {
+    ctx.reset();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  } else {
+    if (onItems.length > 0) {
+      const itemWidth = canvas.width / onItems.length;
+  
+      onItems.forEach((item, index) => {
+        if (!item.on) return;
+        ctx.fillStyle = item.color;
+        ctx.fillRect(index * itemWidth, 0, itemWidth, canvas.height);
+      });
+    }
   }
 }
 
@@ -109,16 +121,21 @@ function renderLinearGradientCanvas(){
 
   const {canvas, ctx, onItems} = getContext();
 
-  if (onItems.length > 0) {
-    //normal vertical would be (0, 0, canvas.width, 0);
-    const grd = ctx.createLinearGradient(0, 0, 200, 0);
+  if (choice !== 'lg') {
+    ctx.reset();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  } else {
+    if (onItems.length > 0) {
+      //normal vertical would be (0, 0, canvas.width, 0);
+      const grd = ctx.createLinearGradient(0, 0, 200, 0);
 
-    onItems.forEach((item, index) => {
-      grd.addColorStop(index / onItems.length, item.color);
-    });
+      onItems.forEach((item, index) => {
+        grd.addColorStop(index / onItems.length, item.color);
+      });
 
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
   }
 }
 
@@ -175,28 +192,40 @@ function renderCircleParticlesCanvas(){
   console.log('rendering circle particles canvas');
 
   const {canvas, ctx, onItems} = getContext();
-  //ctx.reset();
-  //ctx.clearRect(0, 0, canvas.width, canvas.height);
+  console.log('onItems in renderCircles');
+  console.dir(onItems);
   
   if (onItems.length > 0) {
     
     ctx.globalAlpha = 0.5;
 
-    let particlesArray = [];
+  
     const size = 101;
-    let colors = generateParticleColors(size);
+    let colors = generateParticleColors(size, onItems);
 
-    generateParticles(size, colors);
-    setSize();
-    animate();
+    let particlesArray = generateParticles(size, colors);
+    console.log('particlesArray');
+    console.dir(particlesArray);
 
-    function generateParticleColors(size){
+    canvas.height = innerHeight; 
+    canvas.width = innerWidth;
+
+    animate(particlesArray);
+
+    function generateParticleColors(size, onItems){
+      console.log('onItems in generateParticleColors');
+      console.dir(onItems);
+
       const onColors = onItems.map(item => item.color);
+      console.log('onColors');
+      console.dir(onColors);
+
       let colors = [];
 
       while (colors.length < size){
         colors = [...colors, ...onColors];
       }
+      console.log(`colors contains excited pink ${colors.includes('#eb4ce0')}`);
       console.log(`generateParticleColors colors has ${colors.length} and size is ${size}`);
 
       return colors;
@@ -204,6 +233,7 @@ function renderCircleParticlesCanvas(){
 
     function generateParticles(amount, colors) {
       //console.log(`particlesArray first ${particlesArray.length} and adding ${amount}`);
+      let particlesArray = [];
       for (let i = 0; i < amount; i++) {
         particlesArray[i] = new Particle(
           innerWidth / 2,
@@ -213,11 +243,7 @@ function renderCircleParticlesCanvas(){
           0.01,
         );
       }
-    }
-
-    function setSize() {
-      canvas.height = innerHeight;
-      canvas.width = innerWidth;
+      return particlesArray;
     }
 
     function Particle(x, y, particleTrailWidth, strokeColor, rotateSpeed) {
@@ -247,12 +273,16 @@ function renderCircleParticlesCanvas(){
     }
 
     function animate() {
-      requestAnimationFrame(anim);
+      let req = requestAnimationFrame(animate);
 
       ctx.fillStyle = "rgba(0,0,0,0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      particlesArray.forEach((particle) => particle.rotate());
+      if (choice !== 'cp') {
+        cancelAnimationFrame(req);
+      } else {
+        particlesArray?.forEach((particle) => particle.rotate());
+      }
     }
   }
 }
