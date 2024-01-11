@@ -11,11 +11,17 @@
   color: black;
 }
 
-canvas {
-  width: 1000px;;
-  height: 400px;
+#colorCanvas {
+  width: 100%;
+  height: 600px;
   max-width: 100%;
   /* border: 3px solid #000; */
+}
+
+#animatedCanvas {
+  width: 100%;
+  height: 600px;
+  max-width: 100%;
 }
 
 .canvas-row {
@@ -28,6 +34,7 @@ canvas {
 }
 
 .infinity-symbol {
+  background-image: none;
   position: relative;
   width: 106px;
   height: 50px;
