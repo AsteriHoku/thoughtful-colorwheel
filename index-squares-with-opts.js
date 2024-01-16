@@ -1,8 +1,6 @@
 //todo s Overlaying transparent shapes https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
 //todo s Quadradic curve! https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/quadraticCurveTo
 //todo add different options in the lineargradient function
-//todo s break up logic for single responsibility and clean/concise code
-//todo s revisit css sizing and responsiveness
 
 let choice = 'sl';
 let items = {
@@ -22,8 +20,6 @@ const animatedChoices = ['cp'];
 
 setInfinityColors();
 renderCanvas();
-
-// #region main funcs
 
 function setInfinityColors() {
   const onItems = Object.values(items).filter(item => item.on);
@@ -51,6 +47,7 @@ function changeColor(element) {
     items[elem].on = true;
     element.style.backgroundColor = items[elem].color;
   }
+  //console.log('in changeColor -> setInfinityColors');
   setInfinityColors();
   renderCanvas();
 }
@@ -59,7 +56,7 @@ function handleChoiceClicked(id){
   choice = id ? id : 'sl';
   renderCanvas();
 }
-//for dev purposes
+
 function selectAllColors(){
   for (const key in items) {
     items[key].on = true;
@@ -85,6 +82,7 @@ function renderCanvas(){
       //   renderCircleParticlesCanvas(canvas, ctx, onItems);
       //   break;
       default:
+        console.log('default renderCanvas choice')
         renderStraightLinesCanvas(canvas, ctx, onItems);
     }
   }
@@ -104,9 +102,7 @@ function getContext(){
 
   return {canvas, ctx, onItems};
 }
-// #endregion main funcs
 
-// #region canvas renders
 function renderStraightLinesCanvas(canvas, ctx, onItems){
   const itemWidth = canvas.width / onItems.length;
 
@@ -150,6 +146,7 @@ function renderShapesCanvas(canvas, ctx, onItems){
 
   onItems.forEach((item, index) => {
     ctx.fillStyle = item.color;
+    //Math.random() * (max - min) + min;
     const minx = canvas.width/20;
     const miny = canvas.height/20;
     const size = Math.random() * (minx*5);
@@ -160,5 +157,80 @@ function renderShapesCanvas(canvas, ctx, onItems){
 
     ctx.fillRect(randx, randy, size, size);
   })
+
+  //todo idea split the canvas up into sections acccording to no of on colors
+  //so squares don't overlay each other
+  //or I guess do a check to make sure there isn't an existing square where you're about to place one
+  //perhaps generate a list of randx, randy, size first to make it a data structure
+
+  // onItems.forEach((item, index) => {
+  //   ctx.fillStyle = item.color;
+  //   //Math.random() * (max - min) + min;
+  //   const minx = canvas.width/4;
+  //   const miny = canvas.height/4;
+  //   let randx = Math.random() * (canvas.width - minx*2) + minx;
+  //   let randy = Math.random() * (canvas.height - miny*2) + miny;
+  //   ctx.fillRect(randx, randy, canvas.width-(randx*index), canvas.height-(randy*index));
+  // })
+
+  // onItems.forEach((item, index) => {
+  //   ctx.fillStyle = item.color;
+  //   let randx = Math.random() * canvas.width/2;
+  //   let randy = Math.random() * canvas.height/2;
+  //   ctx.fillRect(randx, randy, canvas.width/randx, canvas.height/randy);
+  // })
+
+  // onItems.forEach((item, index) => {
+  //   ctx.fillStyle = item.color;
+  //   let rand = Math.random() * (canvas.height/2);
+  //   ctx.fillRect(rand, rand, canvas.width/rand, canvas.height/rand);
+  // })
+
+  //todo s version to try as bottom right pyramid looking thing
+  //   onItems.forEach((item, index) => {
+  //   ctx.fillStyle = item.color;
+  //   //Math.random() * (max - min) + min;
+  //   // const minx = canvas.width/4;
+  //   // const miny = canvas.height/4;
+  //   let randx = Math.random() * canvas.width;
+  //   let randy = Math.random() * canvas.height;
+  //   const inc = index+1;
+  //   ctx.fillRect(randx, randy, canvas.width-(inc), canvas.height-(inc));
+  //   console.log(`for ${item.color} with index ${index} - ${randx} , ${randy} , ${canvas.width-(randx*inc)} , ${canvas.height-(randy*inc)}`)
+  // })
+
+  //todo s version with dancing sizes
+  // onItems.forEach((item, index) => {
+  //   ctx.fillStyle = item.color;
+  //   const minx = canvas.width/10;
+  //   const miny = canvas.height/10;
+  //   let size = Math.random() * (minx*index);
+  //   const maxx = canvas.width - minx - size;
+  //   const maxy = canvas.height - miny - size;
+
+  //   console.log('canvas.width ' + canvas.width + ' canvas.height ' + canvas.height);
+  //   console.log(`minx ${minx} maxx ${maxx}`);
+  //   console.log(`miny ${miny} maxy ${maxy}`);
+  //   let randx = Math.random() * (maxx - minx) + minx;
+  //   let randy = Math.random() * (maxy - miny) + miny;
+
+  //   ctx.fillRect(randx, randy, size, size);
+  //   console.log(`randx ${randx}, randy ${randy}`);
+  // })
+
+  //todo s big squares version
+  // onItems.forEach((item, index) => {
+  //   ctx.fillStyle = item.color;
+  //   //Math.random() * (max - min) + min;
+  //   const minx = canvas.width/20;
+  //   const miny = canvas.height/20;
+  //   const size = Math.random() * (minx*10);
+  //   const maxx = canvas.width - minx - size;
+  //   const maxy = canvas.height - miny - size;
+
+  //   let randx = Math.random() * (maxx - minx) + minx;
+  //   let randy = Math.random() * (maxy - miny) + miny;
+
+  //   ctx.fillRect(randx, randy, size, size);
+  // })
 }
-// #endregion canvas renders
