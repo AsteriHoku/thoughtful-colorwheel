@@ -60,12 +60,12 @@ function handleChoiceClicked(id){
   renderCanvas();
 }
 //for dev purposes
-// function selectAllColors(){
-//   for (const key in items) {
-//     items[key].on = true;
-//   }
-//   renderCanvas();
-// }
+function selectAllColors(){
+  for (const key in items) {
+    items[key].on = true;
+  }
+  renderCanvas();
+}
 
 function renderCanvas(){
   const {canvas, ctx, onItems} = getContext();
@@ -90,9 +90,15 @@ function renderCanvas(){
   }
 }
 
-function getContext(){
-  let canvas = document.getElementById('colorCanvas');
-  canvas.classList.remove('d-none');
+function getContext(isAnimated){
+  if (isAnimated){
+    document.getElementById('animatedCanvas').classList.remove('d-none');
+    document.getElementById('colorCanvas').classList.add('d-none');
+  } else{
+    document.getElementById('animatedCanvas').classList.add('d-none');
+    document.getElementById('colorCanvas').classList.remove('d-none');
+  }
+  let canvas = isAnimated ? document.getElementById('animatedCanvas') : document.getElementById('colorCanvas');
   canvas.width = 1000;
   canvas.height = 600;
   let ctx = canvas.getContext('2d');
@@ -168,14 +174,8 @@ function renderShapesCanvas(canvas, ctx, onItems){
 function renderCircleParticlesCanvas(canvas, ctx, onItems){
   //todo sarah split this function so it can be called with different sizes for different buttons 
   //"dandelion" 800 "circle particles" 101 "suncatcher" 1000 - maybe?
-  console.log('rendering circle particles canvas');
-  resetColors = false;
-  //comment this out to fix colors
-  // canvas.height = innerHeight;
-  // canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  canvas.width = innerWidth;
   ctx.globalAlpha = 0.5;
+
   animate(canvas, ctx, onItems);
 }
 
@@ -184,36 +184,23 @@ function animate(canvas, ctx, onItems) {
   const size = 101;
   const colors = generateParticleColors(size, onItems);
   const particlesArray = generateParticles(size, colors, canvas, ctx);
-  //comment this out to get the intended animation
+  console.dir(particlesArray);
 
   //note: resizing clears the canvas - could maybe add eventlistener for resizing
   //and set logic for when resizing happens
-
   
-  //todo
-  
-  anim_frame = requestAnimationFrame(() => animate(canvas, ctx, onItems));
-  
-
-  if (choice !== 'cp' || particlesArray.length === 0 || resetColors) {
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    cancelAnimationFrame(anim_frame);
-    anim_frame = null;
-    if ( resetColors ) {
-      resetColors = false;
-      anim_frame = requestAnimationFrame(() => animate(canvas, ctx, onItems));
-    }
-  } else {
-    
-  }
-  ctx.fillStyle = "rgba(0,0,0,0.9)";
+  let anim_frame = requestAnimationFrame(() => animate(canvas, ctx, onItems));
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  particlesArray?.forEach((particle) => particle.rotate());
+
+  if (choice !== 'cp' || particlesArray.length === 0) {
+    cancelAnimationFrame(anim_frame);
+  } else {
+    particlesArray?.forEach((particle) => particle.rotate());
+  }
 }
 
 function Particle(x, y, particleTrailWidth, strokeColor, rotateSpeed, canvas, ctx) {
-  console.log('Particle()');
   this.x = x;
   this.y = y;
   this.particleTrailWidth = particleTrailWidth;
@@ -237,32 +224,24 @@ function Particle(x, y, particleTrailWidth, strokeColor, rotateSpeed, canvas, ct
 }
 
 function generateParticleColors(size, onItems){
-  console.log('generateParticleColors()');
   const onColors = onItems.map(item => item.color);
-  console.log('onColors inside genPC: ', onColors);
+  console.log('onColors inside genPC with on colors: ', onColors);
   let colors = [];
 
   while (colors.length < size){
     colors = [...colors, ...onColors];
   }
-  //console.log(`filled colors has ${colors.length} and size is ${size}`);
-  //note: this seems to be unnecessary like I originally thought
-  // while (colors.length > size){
-  //   colors.pop();
-  // }
-  //console.log(`colors now should be even with size ${colors.length} === ${size} ? ==> ${colors.length === size}`);
-
+  
   return colors;
 }
 
 function generateParticles(amount, colors, canvas, ctx) {
-  console.log('generateParticles()');
   let particlesArray = [];
   for (let i = 0; i < amount; ++i) {
     particlesArray[i] = new Particle(
       canvas.width / 2,
       canvas.height / 2,
-      5,
+      10,//thickness of the line
       colors[i],
       0.01,
       canvas,
