@@ -60,12 +60,12 @@ function handleChoiceClicked(id){
   renderCanvas();
 }
 //for dev purposes
-function selectAllColors(){
-  for (const key in items) {
-    items[key].on = true;
-  }
-  renderCanvas();
-}
+// function selectAllColors(){
+//   for (const key in items) {
+//     items[key].on = true;
+//   }
+//   renderCanvas();
+// }
 
 function renderCanvas(){
   const {canvas, ctx, onItems} = getContext();
@@ -81,9 +81,9 @@ function renderCanvas(){
       case 'ss':
         renderShapesCanvas(canvas, ctx, onItems);
         break;
-      // case 'cp':
-      //   renderCircleParticlesCanvas(canvas, ctx, onItems);
-      //   break;
+      case 'cp':
+        renderCircleParticlesCanvas(canvas, ctx, onItems);
+        break;
       default:
         renderStraightLinesCanvas(canvas, ctx, onItems);
     }
@@ -162,3 +162,114 @@ function renderShapesCanvas(canvas, ctx, onItems){
   })
 }
 // #endregion canvas renders
+
+// #region circle particles
+
+function renderCircleParticlesCanvas(canvas, ctx, onItems){
+  //todo sarah split this function so it can be called with different sizes for different buttons 
+  //"dandelion" 800 "circle particles" 101 "suncatcher" 1000 - maybe?
+  console.log('rendering circle particles canvas');
+  resetColors = false;
+  //comment this out to fix colors
+  // canvas.height = innerHeight;
+  // canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  canvas.width = innerWidth;
+  ctx.globalAlpha = 0.5;
+  animate(canvas, ctx, onItems);
+}
+
+function animate(canvas, ctx, onItems) {
+ // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const size = 101;
+  const colors = generateParticleColors(size, onItems);
+  const particlesArray = generateParticles(size, colors, canvas, ctx);
+  //comment this out to get the intended animation
+
+  //note: resizing clears the canvas - could maybe add eventlistener for resizing
+  //and set logic for when resizing happens
+
+  
+  //todo
+  
+  anim_frame = requestAnimationFrame(() => animate(canvas, ctx, onItems));
+  
+
+  if (choice !== 'cp' || particlesArray.length === 0 || resetColors) {
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    cancelAnimationFrame(anim_frame);
+    anim_frame = null;
+    if ( resetColors ) {
+      resetColors = false;
+      anim_frame = requestAnimationFrame(() => animate(canvas, ctx, onItems));
+    }
+  } else {
+    
+  }
+  ctx.fillStyle = "rgba(0,0,0,0.9)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  particlesArray?.forEach((particle) => particle.rotate());
+}
+
+function Particle(x, y, particleTrailWidth, strokeColor, rotateSpeed, canvas, ctx) {
+  console.log('Particle()');
+  this.x = x;
+  this.y = y;
+  this.particleTrailWidth = particleTrailWidth;
+  this.strokeColor = strokeColor;
+  this.theta = Math.random() * Math.PI * 2;
+  this.rotateSpeed = rotateSpeed;
+  this.t = Math.random() * 150;
+
+  this.rotate = () => {
+    const ls = { x: this.x, y: this.y };
+    this.theta += this.rotateSpeed;
+    this.x = canvas.width / 2 + Math.cos(this.theta) * this.t;
+    this.y = canvas.height / 2 + Math.sin(this.theta) * this.t;
+    ctx.beginPath();
+    ctx.lineWidth = this.particleTrailWidth;
+    ctx.strokeStyle = this.strokeColor;
+    ctx.moveTo(ls.x, ls.y);
+    ctx.lineTo(this.x, this.y);
+    ctx.stroke();
+  };
+}
+
+function generateParticleColors(size, onItems){
+  console.log('generateParticleColors()');
+  const onColors = onItems.map(item => item.color);
+  console.log('onColors inside genPC: ', onColors);
+  let colors = [];
+
+  while (colors.length < size){
+    colors = [...colors, ...onColors];
+  }
+  //console.log(`filled colors has ${colors.length} and size is ${size}`);
+  //note: this seems to be unnecessary like I originally thought
+  // while (colors.length > size){
+  //   colors.pop();
+  // }
+  //console.log(`colors now should be even with size ${colors.length} === ${size} ? ==> ${colors.length === size}`);
+
+  return colors;
+}
+
+function generateParticles(amount, colors, canvas, ctx) {
+  console.log('generateParticles()');
+  let particlesArray = [];
+  for (let i = 0; i < amount; ++i) {
+    particlesArray[i] = new Particle(
+      canvas.width / 2,
+      canvas.height / 2,
+      5,
+      colors[i],
+      0.01,
+      canvas,
+      ctx
+    );
+  }
+  return particlesArray;
+}
+
+// #endregion circle particles
