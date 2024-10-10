@@ -1,10 +1,15 @@
 //todo s Overlaying transparent shapes https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
+//todo sarah make choice array? choice needs to be in the array?
 //todo add different options in the lineargradient function
+//todo sarah split into different js files, start with circle particles because it's big
 
-//todo s turn cp callback into timeout or something
-//if choice === cp then animate for a duration
-//otherwise stop animating
-//if need help, find documentation that explains steps and timers
+//todo sarah remember to save this copy as some sort of msi copy I guess
+//todo sarah test optical keyboard vs mechanical keyboard
+//ok so I know that I have the msi copy saved so that's good
+//maybe I do just need to get used to this keyboard
+//but I still can't do the knobs the same
+//maybe knobs don't matter?
+//but I think the split space bar is important
 
 let choice = 'sl';
 const height = 400;
